@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Stopwatch</title>
+    <style>
+      #display {
+        font-size: 20pt;
+        text-align: center;
+        margin-top: 50px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Stopwatch</h1>
+    <p id="display">00:00:00</p>
+    <button onclick="start()">Start</button>
+    <button onclick="reset()">Reset</button>
+    <button onclick="stop()">Stop</button>
+
+    <script>
+      var startTime; // 保存计时开始时间
+      var elapsedTime = 0; // 保存累计时间
+      var timerInterval; // 定时器 ID
+
+      function start() {
+        // 获取当前时间作为计时开始时间
+        startTime = new Date().getTime() - elapsedTime;
+
+        // 每隔 10 毫秒更新计时器显示
+        timerInterval = setInterval(function() {
+          var now = new Date().getTime();
+          elapsedTime = now - startTime;
+          updateDisplay(elapsedTime);
+        }, 10);
+      }
+
+      function stop() {
+        // 清除定时器
+        clearInterval(timerInterval);
+      }
+
+      function reset() {
+        // 停止计时器
+        stop();
+
+        // 重置累计时间并更新显示
+        elapsedTime = 0;
+        updateDisplay(elapsedTime);
+      }
+
+      function updateDisplay(elapsedTime) {
+        // 将毫秒转换为时、分、秒格式，并更新显示
+        var hours = Math.floor(elapsedTime / (60 * 60 * 1000));
+        var minutes = Math.floor((elapsedTime % (60 * 60 * 1000)) / (60 * 1000));
+        var seconds = Math.floor((elapsedTime % (60 * 1000)) / 1000);
+        var centiseconds = Math.floor((elapsedTime % 1000) / 10);
+
+        var displayString = padNumber(hours) + ":" +
+                            padNumber(minutes) + ":" +
+                            padNumber(seconds) + "." +
+                            padNumber(centiseconds);
+
+        document.getElementById("display").innerHTML = displayString;
+      }
+
+      function padNumber(num) {
+        // 将数字前面补零，使其成为两位数
+        if (num < 10) {
+          return "0" + num.toString();
+        } else {
+          return num.toString();
+        }
+      }
+    </script>
+  </body>
+</html>
